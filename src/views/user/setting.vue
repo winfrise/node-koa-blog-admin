@@ -1,67 +1,80 @@
 <template>
   <div class="app-container">
-    <el-table
-      :data="list"
-      style="width: 100%"
-    >
-      <el-table-column
-        width="180"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.label }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column min-width="300px">
-        <template slot-scope="{row}">
-          <template v-if="row.isEdit">
-            <el-input v-model="row.value" class="edit-input" size="small" />
-            <el-button
-              class="cancel-btn"
-              size="small"
-              icon="el-icon-refresh"
-              type="warning"
-              @click="cancelEdit(row)"
-            >
-              cancel
-            </el-button>
-          </template>
-          <span v-else>{{ row.value }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="Actions" width="120">
-        <template slot-scope="{row}">
-          <el-button
-            v-if="row.isEdit"
-            type="success"
-            size="small"
-            icon="el-icon-circle-check-outline"
-            @click="confirmEdit(row)"
+    <el-row :gutter="32">
+      <el-col :span="16">
+        <div>个人信息：</div>
+        <el-table
+          :show-header="false"
+          :data="list"
+          style="width: 100%"
+        >
+          <el-table-column
+            width="180"
           >
-            Ok
-          </el-button>
-          <el-button
-            v-else
-            type="primary"
-            size="small"
-            icon="el-icon-edit"
-            @click="row.isEdit=!row.isEdit"
-          >
-            Edit
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%" />
+            <template slot-scope="{row}">
+              <span>{{ row.label }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="300px">
+            <template slot-scope="{row}">
+              <template v-if="row.isEdit">
+                <el-input v-model="row.value" class="edit-input" size="small" />
+                <el-button
+                  class="cancel-btn"
+                  size="small"
+                  icon="el-icon-refresh"
+                  type="warning"
+                  @click="cancelEdit(row)"
+                >
+                  cancel
+                </el-button>
+              </template>
+              <span v-else>{{ row.value }}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="center" width="120">
+            <template slot-scope="{row}">
+              <el-button
+                v-if="row.isEdit"
+                type="success"
+                size="small"
+                icon="el-icon-circle-check-outline"
+                @click="confirmEdit(row)"
+              >
+                Ok
+              </el-button>
+              <el-button
+                v-else
+                type="primary"
+                size="small"
+                icon="el-icon-edit"
+                @click="row.isEdit=!row.isEdit"
+              >
+                Edit
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="8">
+        <AvatorUpload :avatar="userInfo.avator" @uploadComplete="uploadComplete" />
+      </el-col>
+    </el-row>
+
   </div>
 </template>
 
 <script>
+import AvatorUpload from './components/avatar-upload'
 import { fetchUserInfo, updateUserInfo } from '@/api/user'
 
 export default {
   name: 'InlineEditTable',
+  components: {
+    AvatorUpload
+  },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -102,6 +115,22 @@ export default {
     this.fetchUserInfo()
   },
   methods: {
+    uploadComplete(data) {
+      updateUserInfo({ avator: data.path })
+        .then(res => {
+          this.userInfo.avator = data.path
+          this.$message({
+            message: 'The avator has been edited',
+            type: 'success'
+          })
+        })
+        .catch(err => {
+          this.$message({
+            message: err.message,
+            type: 'warning'
+          })
+        })
+    },
     async fetchUserInfo() {
       this.listLoading = true
       await fetchUserInfo(this.listQuery)
