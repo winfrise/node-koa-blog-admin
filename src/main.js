@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+import Cookies from 'js-cookie'
+
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
@@ -27,6 +29,10 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+
+Vue.use(ElementUI, {
+  size: Cookies.get('size') || 'medium' // set element-ui default size
+})
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

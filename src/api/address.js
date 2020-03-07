@@ -7,7 +7,10 @@ const address = {
   updateUserInfo: `${hostname}/admin-api/user/update`, // 用户信息
   createArticle: `${hostname}/admin-api/article/create`, // 创建/修改文章
   articleList: `${hostname}/admin-api/article/list`,
-  articleDetail: `${hostname}/admin-api/article/detail`
+  articleDetail: `${hostname}/admin-api/article/detail`,
+  sourceList: `${hostname}/admin-api/source/list`,
+  uploadFile: `${hostname}/admin-api/upload/singleFile`
 }
 
 export default address
+

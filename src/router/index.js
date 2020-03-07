@@ -104,6 +104,28 @@ export const constantRoutes = [
   },
 
   {
+    path: '/source',
+    component: Layout,
+    redirect: '/source/list',
+    name: 'Source',
+    meta: { title: '资源管理', icon: 'article' },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/source/list/index'),
+        name: 'SourceList',
+        meta: { title: '资源列表', icon: 'list' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/source/list/index'),
+        name: 'SourceList',
+        meta: { title: '资源添加', icon: 'list' }
+      }
+    ]
+  },
+
+  {
     path: '/form',
     component: Layout,
     children: [
@@ -170,6 +192,19 @@ export const constantRoutes = [
         path: 'menu2',
         component: () => import('@/views/nested/menu2/index'),
         meta: { title: 'menu2' }
+      }
+    ]
+  },
+
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
       }
     ]
   },
